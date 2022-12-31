@@ -83,7 +83,7 @@ def mainGame():
             
 
         if moveTimer > 0.25:
-            # ensures the snake moves every 0.4 seconds
+            # ensures the snake moves every 0.25 seconds
             if direction == "Right":
                 if snakeLocations[len(snakeLocations) - 1][0] == 12:
                     # if the head of the snake is already in the right-most column
@@ -144,7 +144,7 @@ def mainGame():
             moveTimer = 0
 
         
-        if foodTimer > 3 and foodLocation == []:
+        if foodTimer > 1 and foodLocation == []:
             foodLocation = [random.randint(0,12), random.randint(0,12)]
             # food randomly spawns every 3 seconds, unless there is already food on screen
             while snakeLocations.count(foodLocation) == 1:
@@ -158,6 +158,7 @@ def mainGame():
             # and 60+ is for the 40 pixels at the side of the screen and 20 into the block to get to the center
 
         if snakeLocations.count(snakeLocations[len(snakeLocations) - 1])> 1:
+            # if the same location appears twice, the snake is overlapping itself
             gameOver()
 
         pygame.display.update()
@@ -179,7 +180,47 @@ def test():
         snakeLocations.remove(snakeLocations[0])
 
 def gameOver():
-    pygame.quit()
+    running = True
+    mouseDown = False
+    while running:
+        pygame.draw.rect(win, borderColour, (140, 140, 320, 320))
+        pygame.draw.rect(win, backgroundColour, (150, 150, 300, 300))
+        pygame.draw.rect(win, (14,209,69), (200, 325, 75, 75))
+        pygame.draw.rect(win, (255,0,0), (325, 325, 75, 75))
+
+        mouseX, mouseY = pygame.mouse.get_pos()
+
+        if 200 < mouseX < 275 and 325 < mouseY < 400:
+            pygame.draw.rect(win, (118,227,149), (200, 325, 75, 75))
+            if mouseDown:
+                mainGame()
+        if 325 < mouseX < 400 and 325 < mouseY < 400:
+            pygame.draw.rect(win, (255,99,99), (325, 325, 75, 75))
+            if mouseDown:
+                pygame.quit()
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouseDown = True
+            else:
+                mouseDown = False
+
+        endFont = pygame.font.SysFont('Consolas', 40)
+
+        endText = endFont.render("Game Over!!!", True, (snakeColour))
+        endText2 = endFont.render("Play again?", True, (snakeColour))
+
+        textLocation = endText.get_rect(center = (300, 200))
+        textLocation2 = endText2.get_rect(center = (300, 250))
+        win.blit(endText, textLocation)        
+        win.blit(endText2, textLocation2)
+
+
+
+        pygame.display.update()
+
 
 mainGame()
 pygame.quit()
