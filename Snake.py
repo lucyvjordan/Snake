@@ -65,8 +65,24 @@ def mainGame():
             # this goes through each location the snake is covering and draws a block there
             pygame.draw.rect(win, snakeColour, (40+2+40*snakeLocations[l][0], 40+2+40*snakeLocations[l][1], 36, 36))
             # l is used to cycle through each location in the array, then [0] and [1] are used to reference the x and y location
+            if direction == "Up":
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+10+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+10+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+25+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+10+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+
+            if direction == "Down":
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+10+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+25+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+25+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+25+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
             
-        if moveTimer > 0.4:
+            if direction == "Right":
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+25+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+10+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+25+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+25+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+            
+            if direction == "Left":
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+10+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+10+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+                pygame.draw.circle(win, (emptyBlockColour), (40+2+10+40*snakeLocations[len(snakeLocations) - 1][0], 40+2+25+40*snakeLocations[len(snakeLocations) - 1][1]), 5)
+            
+
+        if moveTimer > 0.25:
             # ensures the snake moves every 0.4 seconds
             if direction == "Right":
                 if snakeLocations[len(snakeLocations) - 1][0] == 12:
@@ -131,6 +147,10 @@ def mainGame():
         if foodTimer > 3 and foodLocation == []:
             foodLocation = [random.randint(0,12), random.randint(0,12)]
             # food randomly spawns every 3 seconds, unless there is already food on screen
+            while snakeLocations.count(foodLocation) == 1:
+                # checks whether the food overlaps with the snake
+                foodLocation = [random.randint(0,12), random.randint(0,12)]
+
         if foodLocation != []:
             pygame.draw.circle(win, (255,0,0), (60+ 40*foodLocation[0], 60+ 40*foodLocation[1]), 15)
             # food is spawned in the centre of the block its been assigned
